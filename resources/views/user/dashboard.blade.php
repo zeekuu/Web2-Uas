@@ -45,7 +45,7 @@
                             <div class="col">
                                 <div class="col-md-6 mb-3">
                                     <h6 class="fw-bold text-dark">Harga Tiket</h6>
-                                    <p>Rp.{{ number_format($event->hargaTiket, 0, ',', '.') }}</p>
+                                    <p>Rp. {{ number_format($event->hargaTiket, 0, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>

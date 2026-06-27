@@ -25,7 +25,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::put('/admin/event/{event}/approve', [App\Http\Controllers\Admin\KonfirmasibayarController::class, 'approve'])->name('admin.event.approve');
         Route::resource('/admin/transaksi', App\Http\Controllers\Admin\TransaksiController::class)->names('admin.transaksi');
-        Route::put('/admin/transaksi/{transaksi}/approve', [App\Http\Controllers\Admin\KonfirmasibayarController::class, 'approve'])->name('admin.transaksi.konfirmasi');
+        Route::put('/admin/transaksi/{transaksi}/approve', [App\Http\Controllers\Admin\TransaksiController::class, 'approve'])->name('admin.transaksi.approve');
+        Route::put('/admin/transaksi/{transaksi}/reject', [App\Http\Controllers\Admin\TransaksiController::class, 'reject'])->name('admin.transaksi.reject');
+        
         Route::get('/storage/{filename}', function ($filename) {
             $path = storage_path('app/public/proposal/' . $filename);
             return response()->file($path);
@@ -37,6 +39,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/panitia/dashboard', [PanitiaPanitiaDashboardController::class, 'index'])->name('panitia.dashboard');
         Route::resource('/panitia/event', App\Http\Controllers\Panitia\EventController::class)->names('panitia.event');
         Route::resource('/panitia/transaksi', App\Http\Controllers\Panitia\TransaksiController::class)->names('panitia.transaksi');
+        Route::put('/panitia/transaksi/{transaksi}/approve', [App\Http\Controllers\Panitia\TransaksiController::class, 'approve'])->name('panitia.transaksi.approve');
+        Route::put('/panitia/transaksi/{transaksi}/reject', [App\Http\Controllers\Panitia\TransaksiController::class, 'reject'])->name('panitia.transaksi.reject');
+        Route::get('/panitia/scan', [App\Http\Controllers\Panitia\TransaksiController::class, 'scanPage'])->name('panitia.scan.index');
+        Route::post('/panitia/scan/proses', [App\Http\Controllers\Panitia\TransaksiController::class, 'scanProses'])->name('panitia.scan.proses');
         });
         
         // Middleware User

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Transaksi;
 use App\Models\User;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -59,17 +60,25 @@ class TransaksiController extends Controller
             return redirect()->back()->with('error', 'Maaf, kuota tiket untuk event ini sudah habis.');
         }
 
+        $uniqueCode = 'SIEKA-' . strtoupper(Str::random(4)) . '-' . time() . '-' . Auth::id();
+        $qrName = 'QR-' . time() . '-' . Str::random(5) . '.svg';
+        $qrImage = QrCode::format('svg')
+                 ->size(300)
+                 ->margin(1)
+                 ->generate($uniqueCode);
+        Storage::disk('public')->put('qrcode/' . $qrName, $qrImage);
+
         $data = [
             'idUser' => Auth::id(),
             'idEvent' => $request->idEvent,
             'status' => 'pending',
-            'kehadiran' => 0, 
-            'qr_code' => '-',
+            'kehadiran' => 0,
+            'qr_code' => $qrName
         ];
 
         if ($request->hasFile('buktiTransfer')) {
             $file = $request->file('buktiTransfer');
-            $fileName = $file->getClientOriginalName();            
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();          
             Storage::disk('public')->putFileAs('buktiTransfer', $file, $fileName);
             $data['buktiTransfer'] = $fileName;
         }

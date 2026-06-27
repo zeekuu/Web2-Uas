@@ -117,8 +117,12 @@
                                                 <a class="nav-link px-2 rounded {{ request()->routeIs('panitia.dashboard') ? 'bg-primary text-white' : '' }}" href="{{ route('panitia.dashboard') }}">Dashboard</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link px-2 rounded {{ request()->routeIs('panitia.transaksi.*') ? 'bg-primary text-white' : '' }}" href="{{ route('panitia.transaksi.masuk') }}">Transaksi Masuk</a>
+                                                <a class="nav-link px-2 rounded {{ request()->routeIs('panitia.event.*') ? 'bg-primary text-white' : '' }}" href="{{ route('panitia.event.index') }}">Event </a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link px-2 rounded {{ request()->routeIs('panitia.transaksi.*') ? 'bg-primary text-white' : '' }}" href="{{ route('panitia.transaksi.index') }}">Transaksi Masuk</a>
+                                            </li>
+                                            
                                         @elseif (Auth::user()->role === 'user')
                                             <li class="nav-item">
                                                 <a class="nav-link px-2 rounded {{ request()->routeIs('user.dashboard') ? 'bg-primary text-white' : '' }}" href="{{ route('user.dashboard') }}">Dashboard</a>
