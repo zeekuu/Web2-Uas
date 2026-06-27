@@ -59,10 +59,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col">
                         <h5 class="fw-bold mb-2">Deskripsi Event</h5>
                         <p class="text-muted mb-4" style="text-align: justify;">{{ $events->deskripsi }}</p>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-6">
                         <h5 class="fw-bold mb-2">Harga Tiket</h5>
                         <p class="text-muted mb-4">Rp. {{ number_format($events->hargaTiket, 0, ',', '.') }}</p>
@@ -76,7 +78,12 @@
                         
                         <div class="mb-3">
                             <label for="buktiTransfer" class="form-label small fw-bold text-muted">UPLOAD BUKTI TRANSFER (Maks 2MB)</label>
-                            <input type="file" class="form-control" id="buktiTransfer" name="buktiTransfer" required>
+                            <input type="file" class="form-control" id="buktiTransfer" name="buktiTransfer">
+                            @error('buktiTransfer')
+                            <small class="alert text-danger">
+                                *{{ $message }}
+                            </small>
+                            @enderror
                         </div>
 
                         @if($events->kuotaPeserta > 0)

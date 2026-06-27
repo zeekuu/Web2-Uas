@@ -24,7 +24,7 @@
                             <th>QR Code</th>
                             <th>Kehadiran</th>
                             <th>Waktu Kehadiran</th>
-                            <th>Aksi</th>
+                            <th>aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,25 +33,56 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $item->user->nama }}</td>
                                 <td>{{ $item->event->namaEvent }}</td>
-                                <td>{{ $item->buktiTransafer }}</td>
-                                <td>{{ $item->status }}</td>
-                                <td>{{ $item->qr_code }}</td>
-                                <td>{{ $item->kehadiran }}</td>
-                                <td>{{ $item->waktuHadir }}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            Opsi
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                            </li>
-                                            <li>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    @if ($item->buktiTransfer)
+                                        <a href="{{ asset('storage/buktiTransfer/' . $item->buktiTransfer) }}"
+                                            class="btn btn-sm btn-warning">
+                                            Lihat Bukti
+                                        </a>
+                                    @else
+                                        <span class="text-muted small">Tidak Ada File</span>
+                                    @endif
                                 </td>
+                                <td>
+                                    @if ($item->status === 'paid')
+                                    <span class="badge bg-success">Paid</span>
+                                    @elseif($item->status === 'pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    @elseif($item->status === 'cancelled')
+                                    <span class="badge bg-danger">Cancelled</span>
+                                    @endif
+                                </td>
+                                <td>{{ $item->qr_code }}</td>
+                                <td>
+                                    <span class="badge {{ $item->kehadiran == 1 ? 'bg-info' : 'bg-secondary' }}">
+                                        {{ $item->kehadiran == 1 ? 'HADIR' : 'BELUM HADIR' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ $item->waktuHadir }}</span>
+                                </td>
+                                <td>@if($item->status === 'pending')
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <form action="{{ route('admin.transaksi.approve', $item->idTransaksi) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-success fw-bold" onclick="return confirm('Setujui pembayaran & kirim QR code ke email user?')">
+                                                Confirm
+                                            </button>
+                                        </form>
+
+                                        <form action="{{ route('admin.transaksi.reject', $item->idTransaksi) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-sm btn-danger fw-bold" onclick="return confirm('Tolak transaksi pendaftaran ini?')">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                    </div>
+                                    @else
+                                    <span class="text-muted small text-uppercase fw-bold">Selesai Diproses</span>
+                                    @endif
+                                    </td>
                             </tr>
                         @endforeach
                     </tbody>

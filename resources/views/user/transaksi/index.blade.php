@@ -55,14 +55,33 @@
                                 </div>
                             </div>
 
-                            @if($item->status === 'approved' || $item->status === 'success')
-                                <div class="mt-3">
-                                    <button class="btn btn-sm btn-outline-primary w-100"
-                                        onclick="alert('Fitur cetak E-Tiket / QR Code belum terpasang.')">
-                                        🖨️ Cetak E-Tiket
-                                    </button>
+                            @if($item->status === 'paid')
+                            <div class="mt-3 pt-3 border-top">
+                                <button class="btn btn-sm btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#qrModal{{ $item->idTransaksi }}">
+                                    📱 Tampilkan QR Code Masuk
+                                </button>
+                            </div>
+                            <div class="modal fade" id="qrModal{{ $item->idTransaksi }}" tabindex="-1" aria-labelledby="qrModalLabel{{ $item->idTransaksi }}" aria-hidden="true">
+                                <div class="modal-dialog modal-sm modal-dialog-centered">
+                                    <div class="modal-content text-center p-3">
+                                        <h6 class="fw-bold mb-3" id="qrModalLabel{{ $item->idTransaksi }}">QR Code Tiket Masuk</h6>
+                                        
+                                        <div class="bg-white p-2 rounded mb-2 border shadow-sm d-flex justify-content-center align-items-center">
+                                            <img src="{{ asset('storage/qrcode/' . $item->qr_code) }}" class="img-fluid" alt="QR Code Tiket" style="width: 220px; height: 220px;">
+                                        </div>
+                                        
+                                        <small class="text-muted d-block mt-2">Tunjukkan QR ini ke meja panitia saat registrasi ulang di lokasi event</small>
+                                        <button type="button" class="btn btn-sm btn-secondary mt-3 w-100" data-bs-dismiss="modal">Tutup Halaman</button>
+                                    </div>
                                 </div>
-                            @endif
+                            </div>
+                        @else
+                            <div class="mt-3 pt-3 border-top text-center">
+                                <span class="text-muted small d-block bg-light p-2 rounded border">
+                                    🔒 QR Code Tiket akan otomatis aktif setelah kiriman bukti transfer Anda selesai diverifikasi panitia.
+                                </span>
+                            </div>
+                        @endif
                         </div>
                     </div>
                 </div>

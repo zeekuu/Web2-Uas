@@ -41,7 +41,7 @@ class TiketMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.tiket',
+            view: 'emails.tiketmail',
         );
     }
 
@@ -54,8 +54,8 @@ class TiketMail extends Mailable
     {
        return [
             Attachment::fromStorageDisk('public', 'qrcode/' . $this->transaksi->qr_code)
-                ->as('QR_Code_Masuk.png')
-                ->withMime('image/png'),
+                ->as('QR_Code_Masuk.svg')
+                ->withMime('image/svg+xml'),
         ];
     }
 }
