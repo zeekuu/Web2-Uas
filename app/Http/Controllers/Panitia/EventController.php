@@ -7,6 +7,7 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventController extends Controller
 {
@@ -32,7 +33,7 @@ class EventController extends Controller
             'kuotaPeserta' => 'required|integer|min:1',
             'hargaTiket' => 'required|integer|min:0',
             'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'fileProposal' => 'required|mimes:pdf|max:2048',
+            'fileProposal' => 'required|mimes:pdf|max:2048',            
         ], [
             'namaEvent.required' => 'Nama Event harus diisi',
             'deskripsi.required' => 'Deskripsi harus diisi',
@@ -56,13 +57,13 @@ class EventController extends Controller
 
         if ($request->hasFile('fileProposal')) {
             $file = $request->file('fileProposal');
-            $fileName = $file->getClientOriginalName();
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('proposal', $file, $fileName);
             $data['fileProposal'] = $fileName;
         }
         if ($request->hasFile('poster')) {
             $file = $request->file('poster');
-            $fileName = $file->getClientOriginalName();
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('poster', $file, $fileName);
             $data['poster'] = $fileName;
         }
@@ -114,7 +115,7 @@ class EventController extends Controller
             }
 
             $file = $request->file('fileProposal');
-            $fileName = $file->getClientOriginalName();
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('proposal', $file, $fileName);
             $data['fileProposal'] = $fileName;
         }
@@ -125,7 +126,7 @@ class EventController extends Controller
             }
 
             $file = $request->file('poster');
-            $fileName = $file->getClientOriginalName();
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
             Storage::disk('public')->putFileAs('poster', $file, $fileName);
             $data['poster'] = $fileName;
         }

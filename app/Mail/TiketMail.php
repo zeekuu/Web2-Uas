@@ -31,7 +31,7 @@ class TiketMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pembayaran Dikonfirmasi - Tiket Masuk'. $this->transaksi->Event->namaEvent,
+            subject: 'Tiket Masuk '. $this->transaksi->Event->namaEvent,
         );
     }
 
@@ -54,8 +54,8 @@ class TiketMail extends Mailable
     {
        return [
             Attachment::fromStorageDisk('public', 'qrcode/' . $this->transaksi->qr_code)
-                ->as('QR_Code_Masuk.svg')
-                ->withMime('image/svg+xml'),
+                ->as('QR_Code_Masuk.png')
+                ->withMime('image/png'),
         ];
     }
 }

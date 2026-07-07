@@ -40,11 +40,28 @@ class UserController extends Controller
             'nama' => 'required',
             'email' => 'required|email|unique:users,email,' . $users->idUser . ',idUser',
             'role' => 'required',
+            'nim' => 'nullable|unique:users,nim,' . $users->idUser . ',idUser',
+            'password' => 'nullable|confirmed',
+        ],[
+            'nama.required' => 'Nama harus diisi',
+            'email.required' => 'Email harus diisi',
+            'email.unique' => 'Email sudah terdaftar',
+            'role.required' => 'Role harus diisi',
+            'nim.required' => 'Nim harus diisi',
+            'nim.unique' => 'Nim sudah terdaftar',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai',
         ]);
         $users = User::findOrFail($id);
-        $users->update($request->all());
+        $input = $request->all();
+        if ($request->filled('password')) {
+            $input['password'] = bcrypt($request->password);
+        } else {
+            unset($input['password']);
+        }
+        $users->update($input);
         return redirect()->route('admin.user.index')->with('success', 'User Berhasil Diperbarui');
     }
+
 
     public function store(Request $request)
     {
@@ -52,13 +69,17 @@ class UserController extends Controller
             'nama' => 'required',
             'email' => 'required|email|unique:users,email',
             'role' => 'required',
+            'nim' => 'nullable|unique:users,nim',
             'password' => 'required|confirmed',
         ],[
             'nama.required' => 'Nama harus diisi',
             'email.required' => 'Email harus diisi',
             'email.unique' => 'Email sudah terdaftar',
             'role.required' => 'Role harus diisi',
+            'nim.required' => 'Nim harus diisi',
+            'nim.unique' => 'Nim sudah terdaftar',
             'password.required' => 'Password harus diisi',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai',
         ]);
         
         $users = User::create($request->all());

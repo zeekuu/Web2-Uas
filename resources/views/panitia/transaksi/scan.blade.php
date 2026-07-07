@@ -2,17 +2,18 @@
 @section('title', 'SIEKA - Pemindai Tiket')
 
 @section('content')
+<style>
+    #reader video {
+        transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+    }
+</style>
 <div class="container">
-    <div class="row mb-3">
-        <div class="col">
-            <a href="{{ route('panitia.dashboard') }}" class="btn btn-sm btn-outline-secondary">⬅️ Kembali ke Dashboard</a>
-        </div>
-    </div>
-
+    
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm text-center p-3 mb-4 bg-white">
-                <h4 class="fw-bold mb-1">📷 Pemindai QR Code Tiket</h4>
+                <h4 class="fw-bold mb-1">Pemindai QR Code Tiket</h4>
                 <p class="text-muted small">Izinkan akses kamera perangkat untuk memulai proses check-in peserta.</p>
                 
                 <div id="reader" style="width: 100%; max-width: 450px; margin: 0 auto;" class="rounded border shadow-sm"></div>
@@ -42,7 +43,7 @@
                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
             },
             body: JSON.stringify({
-                qr_code_string: decodedText
+                qr_code: decodedText
             })
         })
         .then(response => response.json())
@@ -77,7 +78,15 @@
     }
 
     // Jalankan inisialisasi modul kamera
-    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+    let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+        fps: 10, 
+        qrbox: {width: 250, height: 250},
+        rememberLastUsedCamera: true,
+        videoConstraints: {
+            facingMode: "user",
+            transform: 'scaleX(-1)' // Gunakan kamera belakang jika tersedia
+        }
+    }, false);
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 </script>
 @endsection

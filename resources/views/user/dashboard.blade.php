@@ -30,7 +30,7 @@
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-bold text-dark">{{ $event->namaEvent }}</h5>
                             
-                            <p class="card-text text-muted flex-grow-1">
+                            <p class="card-text text-muted grow">
                                 {{ Str::limit($event->deskripsi, 100) }}
                             </p>
                             <div class="row">
@@ -42,10 +42,18 @@
                                     <p><i class="fa-solid fa-clock"></i> {{ $event->waktuEvent }}</p>
                                 </div>
                             </div>
-                            <div class="col">
-                                <div class="col-md-6 mb-3">
+                            <div class="row align-items-center ">
+                                <div class="col-md-6">
                                     <h6 class="fw-bold text-dark">Harga Tiket</h6>
-                                    <p>Rp. {{ number_format($event->hargaTiket, 0, ',', '.') }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-success fw-bold fs-3 text-end">
+                                        @if($event->hargaTiket == 0)
+                                            Gratis
+                                        @else
+                                            Rp. {{ number_format($event->hargaTiket, 0, ',', '.') }}
+                                        @endif
+                                    </h6>
                                 </div>
                             </div>
                         </div>

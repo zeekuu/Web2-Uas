@@ -9,14 +9,15 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
-
+    use HasFactory, Notifiable, LogsActivity;
     /**
      * Get the attributes that should be cast.
      *
@@ -47,6 +48,13 @@ class User extends Authenticatable
     public function Transaksi()
     {
         return $this->hasMany(Transaksi::class, 'idUser');
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Otomatis mencatat perubahan pada kolom $fillable
+            ->logOnlyDirty() // Hanya mencatat kolom yang datanya benar-benar berubah
+            ->dontLogEmptyChanges(); // Mencegah log kosong tersimpan
     }
 
 }
