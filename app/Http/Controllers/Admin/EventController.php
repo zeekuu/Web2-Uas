@@ -47,6 +47,7 @@ class EventController extends Controller
             'hargaTiket' => 'required', 
             'fileProposal' => 'required|mimes:pdf|max:2048',
             'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'idUser' => 'required|exists:users,idUser',
         ], [
             'namaEvent.required' => 'Nama Event harus diisi',
             'tempatEvent.required' => 'Tempat Event harus diisi',
@@ -62,6 +63,8 @@ class EventController extends Controller
             'poster.image' => 'Berkas harus berupa gambar',
             'poster.mimes' => 'Format gambar harus JPEG, PNG, atau JPG',
             'poster.max' => 'Ukuran gambar tidak boleh lebih dari 2MB',
+            'idUser.required' => 'Harus dipilih',
+            'idUser.exists' => 'User yang dipilih tidak valid',
         ]);
         $data = $request->all();
         $data['idUser'] = $request->input('idUser', Auth::user()->idUser); 
@@ -111,6 +114,15 @@ class EventController extends Controller
     ]);
 
     $data = $request->all();
+    if ($request->status === 'rejected') {
+        $request->validate([
+            'alasan' => 'required|string|min:5'
+        ], [
+            'alasan.required' => 'Alasan penolakan wajib diisi jika status ditolak.'
+        ]);
+    } else {
+        $data['alasan'] = null;
+    }
 
     if ($request->hasFile('fileProposal')) {
         if ($events->fileProposal) {
@@ -145,6 +157,38 @@ class EventController extends Controller
         $events->delete();
         return redirect()->route('admin.event.index');
     }
+
+    // Tambahkan method ini di dalam class EventController
+
+public function updateStatus(Request $request, $id)
+{
+    $event = Event::findOrFail($id);
+
+    // Validasi dasar
+    $request->validate([
+        'status' => 'required|in:pending,approved,rejected,cancelled',
+    ]);
+
+    // Validasi tambahan: Jika ditolak, kolom alasan wajib diisi
+    if ($request->status === 'rejected') {
+        $request->validate([
+            'alasan' => 'required|string|min:5'
+        ], [
+            'alasan.required' => 'Alasan penolakan wajib diisi jika event ditolak.',
+            'alasan.min' => 'Alasan penolakan minimal berisi 5 karakter.'
+        ]);
+        
+        $event->alasan = $request->alasan;
+    } else {
+        // Jika status diubah kembali ke approved/pending/cancelled, hapus alasannya
+        $event->alasan = null;
+    }
+
+    $event->status = $request->status;
+    $event->save();
+
+    return redirect()->route('admin.event.index')->with('success', 'Status Event Berhasil Diperbarui');
+}
 
 
 }

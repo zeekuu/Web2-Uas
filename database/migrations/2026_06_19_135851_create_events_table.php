@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('fileProposal')->nullable(); 
             $table->enum('status', ['pending', 'approved', 'rejected', 'cancelled'])->default('pending');
             $table->text('alasan')->nullable(); 
-            $table->decimal('hargaTiket', 12)->default(0); 
+            $table->integer('hargaTiket'); 
             $table->integer('kuotaPeserta');
             $table->timestamps();
         });
@@ -31,6 +31,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('events');
+        Schema::enableForeignKeyConstraints();
     }
 };

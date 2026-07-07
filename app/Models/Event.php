@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Event extends Model
 {
+    use LogsActivity;
     protected $primaryKey = 'idEvent';
     protected $guarded = ['idEvent'];
 
@@ -21,7 +24,8 @@ class Event extends Model
         'fileProposal',
         'alasan',
         'poster',
-        'status'
+        'status',
+        'rekening'
     ];
 
     public function User()
@@ -32,6 +36,14 @@ class Event extends Model
     public function Transaksi()
     {
         return $this->hasMany(Transaksi::class, 'idEvent', 'idEvent');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll() // Otomatis mencatat perubahan pada kolom $fillable
+            ->logOnlyDirty() // Hanya mencatat kolom yang datanya benar-benar berubah
+            ->dontLogEmptyChanges(); // Mencegah log kosong tersimpan
     }
 
 }

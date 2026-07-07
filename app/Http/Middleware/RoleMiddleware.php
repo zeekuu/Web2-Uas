@@ -25,6 +25,6 @@ class RoleMiddleware
             return $next($request);
         }
 
-        return redirect()->route('404')->with('error', 'Anda tidak memiliki hak akses.');
+        return redirect()->route('403')->with('error', 'ANDA TIDAK MEMILIKI HAK AKSES.');
     }
 }

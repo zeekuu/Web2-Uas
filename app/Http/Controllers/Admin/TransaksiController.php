@@ -20,29 +20,6 @@ class TransaksiController extends Controller
         return view('admin.transaksi.index', compact('transaksis', 'users', 'events'));
     }
 
-    public function create(){
-
-    }
-
-    public function show($id){
-
-    }
-
-    public function edit($id){
-
-    }
-
-    public function update(Request $request, $id){
-
-    }
-
-    public function store(Request $request, $id){
-        
-    }
-
-    public function destroy($id){
-
-    }
     public function approve(Request $request, string $id)
     {
         $transaksi = Transaksi::with(['User', 'Event'])->findOrFail($id);

@@ -13,7 +13,7 @@ class KonfirmasibayarController extends Controller
         return view('admin.transaksi.konfirmasi', compact('transaksis'));
     }
 
-    public function update(Request $request, $id){
+    public function approve(Request $request, $id){
         $transaksis = Transaksi::findOrFail($id);
         $transaksis->status = $request->status;
         $transaksis->save();

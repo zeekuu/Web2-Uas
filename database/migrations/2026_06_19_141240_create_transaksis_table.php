@@ -21,7 +21,7 @@ return new class extends Migration
             
             $table->string('buktiTransfer')->nullable(); 
             $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
-            $table->string('qr_code')->unique(); 
+            $table->string('qr_code')->nullable(); 
             $table->boolean('kehadiran')->default(false);
             $table->timestamp('waktuHadir')->nullable(); 
             $table->timestamps();
